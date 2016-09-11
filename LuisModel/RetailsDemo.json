@@ -1,0 +1,442 @@
+{
+  "luis_schema_version": "1.3.0",
+  "name": "RetailsDemo",
+  "desc": "",
+  "culture": "zh-cn",
+  "intents": [
+    {
+      "name": "AskLocation"
+    },
+    {
+      "name": "AskPrice"
+    },
+    {
+      "name": "None"
+    }
+  ],
+  "entities": [
+    {
+      "name": "商品"
+    }
+  ],
+  "composites": [],
+  "bing_entities": [
+    "number",
+    "ordinal"
+  ],
+  "actions": [
+    {
+      "actionName": "AskLocation",
+      "intentName": "AskLocation",
+      "actionParameters": [
+        {
+          "parameterName": "ItemName",
+          "entityName": "商品",
+          "required": false
+        }
+      ]
+    },
+    {
+      "actionName": "AskPrice",
+      "intentName": "AskPrice",
+      "actionParameters": [
+        {
+          "parameterName": "ItemName",
+          "entityName": "商品",
+          "required": true
+        },
+        {
+          "parameterName": "ItemQuantity",
+          "entityName": "number",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "model_features": [
+    {
+      "name": "UnknownGoods",
+      "mode": true,
+      "words": "這個,那個,這些,那些,這幾樣",
+      "activated": true
+    },
+    {
+      "name": "Goods",
+      "mode": true,
+      "words": "牙膏,牙刷,杯子,馬克杯,零食,蝦味先,乖乖,麵包",
+      "activated": true
+    }
+  ],
+  "regex_features": [],
+  "utterances": [
+    {
+      "text": "這裡有賣蝦味先嗎",
+      "intent": "AskLocation",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 4,
+          "endPos": 6
+        }
+      ]
+    },
+    {
+      "text": "蝦味先在哪裡",
+      "intent": "AskLocation",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 0,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "請問有蝦味先嗎",
+      "intent": "AskLocation",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 3,
+          "endPos": 5
+        }
+      ]
+    },
+    {
+      "text": "蝦味先多少錢",
+      "intent": "AskPrice",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 0,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "我找不到蝦味先",
+      "intent": "AskLocation",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 4,
+          "endPos": 6
+        }
+      ]
+    },
+    {
+      "text": "一包蝦味先多少錢",
+      "intent": "AskPrice",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 2,
+          "endPos": 4
+        }
+      ]
+    },
+    {
+      "text": "1包蝦味先多少錢",
+      "intent": "AskPrice",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 2,
+          "endPos": 4
+        }
+      ]
+    },
+    {
+      "text": "請問牙刷在哪裡",
+      "intent": "AskLocation",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 2,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "牙刷在哪裡",
+      "intent": "AskLocation",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 0,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "牙膏在哪裡",
+      "intent": "AskLocation",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 0,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "2之牙膏多少錢",
+      "intent": "AskPrice",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 2,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "我想知道牙膏在哪裡",
+      "intent": "AskLocation",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 4,
+          "endPos": 5
+        }
+      ]
+    },
+    {
+      "text": "哪裡有牙膏",
+      "intent": "AskLocation",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 3,
+          "endPos": 4
+        }
+      ]
+    },
+    {
+      "text": "這個東西多少錢",
+      "intent": "AskPrice",
+      "entities": []
+    },
+    {
+      "text": "這個在哪裡",
+      "intent": "AskLocation",
+      "entities": []
+    },
+    {
+      "text": "這個東西幾元",
+      "intent": "AskPrice",
+      "entities": []
+    },
+    {
+      "text": "這個在哪",
+      "intent": "AskLocation",
+      "entities": []
+    },
+    {
+      "text": "這樣多少錢",
+      "intent": "AskPrice",
+      "entities": []
+    },
+    {
+      "text": "這幾樣多少錢",
+      "intent": "AskPrice",
+      "entities": []
+    },
+    {
+      "text": "這些在哪裡",
+      "intent": "AskLocation",
+      "entities": []
+    },
+    {
+      "text": "請問牙膏多少錢",
+      "intent": "AskPrice",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 2,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "請問1隻牙膏和1支牙刷多少錢",
+      "intent": "AskPrice",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 4,
+          "endPos": 5
+        },
+        {
+          "entity": "商品",
+          "startPos": 9,
+          "endPos": 10
+        }
+      ]
+    },
+    {
+      "text": "請問牙膏和蝦味先在哪裡",
+      "intent": "AskLocation",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 2,
+          "endPos": 3
+        },
+        {
+          "entity": "商品",
+          "startPos": 5,
+          "endPos": 7
+        }
+      ]
+    },
+    {
+      "text": "1隻鉛筆多少錢",
+      "intent": "AskPrice",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 2,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "2隻牙膏多少錢",
+      "intent": "AskPrice",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 2,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "三隻牙膏多少錢",
+      "intent": "AskPrice",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 2,
+          "endPos": 3
+        }
+      ]
+    },
+    {
+      "text": "這個多少錢",
+      "intent": "AskPrice",
+      "entities": []
+    },
+    {
+      "text": "牙膏多少錢",
+      "intent": "AskPrice",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 0,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "乖乖多少錢",
+      "intent": "AskPrice",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 0,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "泡麵多少錢",
+      "intent": "AskPrice",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 0,
+          "endPos": 1
+        }
+      ]
+    },
+    {
+      "text": "衛生紙多少錢",
+      "intent": "AskPrice",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 0,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "衛生紙在哪裡",
+      "intent": "AskLocation",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 0,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "這裡有賣衛生紙嗎",
+      "intent": "AskLocation",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 4,
+          "endPos": 6
+        }
+      ]
+    },
+    {
+      "text": "馬克杯在哪",
+      "intent": "AskLocation",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 0,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "馬克杯多少",
+      "intent": "AskPrice",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 0,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "哪裡有衛生紙",
+      "intent": "AskLocation",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 3,
+          "endPos": 5
+        }
+      ]
+    },
+    {
+      "text": "哪裡有馬克杯",
+      "intent": "AskLocation",
+      "entities": [
+        {
+          "entity": "商品",
+          "startPos": 3,
+          "endPos": 5
+        }
+      ]
+    }
+  ]
+}

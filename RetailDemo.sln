@@ -21,6 +21,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		resources.txt = resources.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LuisModel", "LuisModel", "{E5F5CCC8-E9CC-449C-85C1-DB941B04D202}"
+	ProjectSection(SolutionItems) = preProject
+		LuisModel\RetailsDemo.json = LuisModel\RetailsDemo.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

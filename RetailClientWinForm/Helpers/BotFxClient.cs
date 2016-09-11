@@ -18,30 +18,38 @@ namespace RetailClientWinForm.Helpers
         DirectLineClient client = null;
         Conversations conversations = null;
         Conversation token = null;
+        public string From { get; set; }
+
         public BotFxClient(string botUrl, string directLineSecret)
         {
             Url = botUrl;
             Secret = directLineSecret;
 
             client = new DirectLineClient(
-                                        new Uri("https://directline.botframework.com/"),
+                                        new Uri(botUrl),
                                         new DirectLineClientCredentials(Secret));
             conversations = new Conversations(client);
             token = conversations.NewConversation();
         }
-        public string From { get; set; }
         public async Task<string> TalkAsync(string msg)
         {
-            var o = conversations.PostMessage(token.ConversationId, new Message
+            try
             {
-                FromProperty = From,
-                ConversationId = token.ConversationId,
-                Text = msg
-            });
-            var messages = conversations.GetMessages(token.ConversationId);
-            var reply = messages.Messages.OrderByDescending(m => m.Created).First();
+                var o = conversations.PostMessage(token.ConversationId, new Message
+                {
+                    FromProperty = From,
+                    ConversationId = token.ConversationId,
+                    Text = msg
+                });
+                var messages = conversations.GetMessages(token.ConversationId);
+                var reply = messages.Messages.OrderByDescending(m => m.Created).First();
 
-            return reply.Text;
+                return reply.Text;
+            }
+            catch (Exception exp)
+            {
+                return $"Error:{exp.Message}";
+            }
         }
     }
 }

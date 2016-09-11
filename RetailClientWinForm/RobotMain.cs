@@ -1,6 +1,6 @@
 ﻿//#define LUIS_INTEGRATION 
 using RetailClientWinForm.Helpers;
-using RetailClientWinForm.RobotBehaviors;
+using MSTC.Robot.Interactions.RobotBehaviors;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,6 +11,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using OpenCvSharp;
+using OpenCvSharp.Extensions;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Auth;
+using System.IO;
+using MSTC.Robot.Interactions.RobotBehaviors.Speech;
+using MSTC.Robot.Interactions.RobotBehaviors.Vision;
 
 namespace RetailClientWinForm
 {
@@ -19,18 +26,19 @@ namespace RetailClientWinForm
         private delegate void WriteLineHandler(string text);
         private delegate void SetButtonStatusHandler(bool enabled);
         private BotFxClient bot = null;
+        private string UserName = null;
 #if LUIS_INTEGRATION
         SpeechInteration speech = new SpeechInteration(
-                                            language: "zh-TW",
-                                            speechApiPrimaryKey: "ba7f8231a25d4f2b871f326213cac223",
-                                            speechApiSecondaryKey: "fbc2ff88054f40099aef8d780b56b5c8",
-                                            luisApiId: "d91dbfa4-dcff-49bb-8d33-5371a25cdadd",
-                                            luisSubscriptionId: "6d35713e91ae40859618c38a6ceb95c5");
+                                            language: ConfigurationManager.AppSettings["SpeechLanguage"],
+                                            speechApiPrimaryKey: ConfigurationManager.AppSettings["SpeechApiPrimaryKey"],
+                                            speechApiSecondaryKey: ConfigurationManager.AppSettings["SpeechApiSecondaryKey"]);
+                                            luisApiId:ConfigurationManager.AppSettings["LuisAppId"],
+                                            luisSubscriptionId: ConfigurationManager.AppSettings["LuisSubscriptionKey"],;
 #else
         SpeechInteration speech = new SpeechInteration(
-                                            language: "zh-TW",
-                                            speechApiPrimaryKey: "ba7f8231a25d4f2b871f326213cac223",
-                                            speechApiSecondaryKey: "fbc2ff88054f40099aef8d780b56b5c8");
+                                            language: ConfigurationManager.AppSettings["SpeechLanguage"],
+                                            speechApiPrimaryKey: ConfigurationManager.AppSettings["SpeechApiPrimaryKey"],
+                                            speechApiSecondaryKey: ConfigurationManager.AppSettings["SpeechApiSecondaryKey"]);
 #endif
         public RobotMain()
         {
@@ -38,13 +46,13 @@ namespace RetailClientWinForm
 
             var key = ConfigurationManager.AppSettings["BotFxDirectLineSecret"];
             var url = ConfigurationManager.AppSettings["BotUrl"];
-            bot = new BotFxClient(url,key);
+            bot = new BotFxClient(url, key);
         }
         private void WriteLine(string msg)
         {
             if (log.InvokeRequired)
             {
-                log.Invoke(new WriteLineHandler((text)=> { log.Text = log.Text + System.Environment.NewLine + text; }), msg);
+                log.Invoke(new WriteLineHandler((text) => { log.Text = log.Text + System.Environment.NewLine + text; }), msg);
             }
             else
             {
@@ -58,12 +66,13 @@ namespace RetailClientWinForm
             {
                 start.Invoke(new SetButtonStatusHandler(
                                             (enabled) => { start.Enabled = enabled; }), state);
-            }else
+            }
+            else
             {
                 start.Enabled = state;
             }
         }
-        private void start_Click(object sender, EventArgs e)
+        private async void start_Click(object sender, EventArgs e)
         {
             //TalkToBot("牙膏多少錢").Wait();
             //return;
@@ -72,18 +81,29 @@ namespace RetailClientWinForm
             speech.StartInput(
                 (p) =>
                 {
-                    WriteLine(p.GetEventData<string>());
+                    WriteLine($">>>{p.GetEventData<string>()}");
 
                 },
-                (f) =>
+                async (f) =>
                 {
 
                     WriteLine($"====== final result ====={System.Environment.NewLine} {f.GetEventData<string>()}");
-                },
-                (r) =>
-                {
-                    WriteLine(r.Result);
+                    var msg = f.GetEventData<string>();
+                    var resp = await TalkToBot(msg);
+                    WriteLine(resp);
+
                     EnableButton(true);
+
+                },
+                (intent)=>{
+                    WriteLine(intent);
+                    EnableButton(true);
+                },
+                (err) =>
+                {
+                    WriteLine(err.ErrorMessage);
+                    EnableButton(true);
+
                 }
             );
 #else
@@ -93,22 +113,66 @@ namespace RetailClientWinForm
                     WriteLine($">>>{p.GetEventData<string>()}");
 
                 },
-                (f) =>
+                async (f) =>
                 {
 
                     WriteLine($"====== final result ====={System.Environment.NewLine} {f.GetEventData<string>()}");
+                    var msg = f.GetEventData<string>();
+                    var resp = await TalkToBot(msg);
+                    WriteLine(resp);
+
                     EnableButton(true);
 
-                    TalkToBot(f.GetEventData<string>());
                 },
-                null
+                null,
+                (err) =>
+                {
+                    WriteLine(err.ErrorMessage);
+                    EnableButton(true);
+
+                }
             );
 #endif
         }
-        async Task TalkToBot(string msg)
+        async Task<string> TalkToBot(string msg)
         {
             var resp = await bot.TalkAsync(msg);
+            return resp;
+        }
+        private string UploadToCloud(Bitmap bitmap)
+        {
+            CloudStorageAccount csa = new CloudStorageAccount(new StorageCredentials(
+                                                                    ConfigurationManager.AppSettings["StorageAccountName"],
+                                                                     ConfigurationManager.AppSettings["StorageAccountKey"]), true);
+            var bc = csa.CreateCloudBlobClient();
+            var cr = bc.GetContainerReference("retails");
+            cr.CreateIfNotExists();
+            using (var ms = new MemoryStream())
+            {
+                bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
+                var blob = cr.GetBlockBlobReference($"{Guid.NewGuid().ToString("B")}.bmp");
+                blob.UploadFromStream(ms);
 
+                return blob.Uri.ToString();
+            }
+        }
+        private void recognize_Click(object sender, EventArgs e)
+        {
+            VisionInteraction vision = new VisionInteraction(
+                                                ConfigurationManager.AppSettings["VisionApiKey"],
+                                                ConfigurationManager.AppSettings["FaceApiKey"],
+                                                ConfigurationManager.AppSettings["StorageAccountName"],
+                                                ConfigurationManager.AppSettings["StorageAccountKey"]);
+            vision.StartInput(
+                null,
+                (arg) => {
+                            UserName = arg.GetEventData<string>();
+                            vision.StopInput();
+
+                            
+                        },
+                null,
+                null);
         }
     }
 }

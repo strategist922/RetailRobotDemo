@@ -24,9 +24,21 @@ namespace RetailBot
         {
             if (activity.Type == ActivityTypes.Message)
             {
-                ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+                  ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
 #if true
-                await Conversation.SendAsync(activity, () => { return new RetailDialogBox(); }); 
+                await Conversation.SendAsync(activity, () => {
+                                                return new RetailDialogBox(
+                                                    from:new UserData
+                                                    {
+                                                        Id = activity.From.Id,
+                                                        Name = activity.From.Name
+                                                    },
+                                                    to:new UserData
+                                                    {
+                                                        Id = activity.Recipient.Id,
+                                                        Name = activity.Recipient.Name
+                                                    }
+                                                ) ; }); 
 #else
 
                 // calculate something for us to return

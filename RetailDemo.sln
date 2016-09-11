@@ -9,6 +9,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetailBot", "RetailBot\Reta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HumanInteraction", "HumanInteraction\HumanInteraction.csproj", "{2307AB4C-14E9-46AB-BFBA-64887100ABBA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sampleData", "sampleData", "{7CE01E64-77F5-40B0-944C-95EBBB25593E}"
+	ProjectSection(SolutionItems) = preProject
+		data\batchInput.json = data\batchInput.json
+		catalog.csv = catalog.csv
+		usage.csv = usage.csv
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CCBC9227-02E4-4F92-A3FF-E85FF6A4D200}"
+	ProjectSection(SolutionItems) = preProject
+		resources.txt = resources.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

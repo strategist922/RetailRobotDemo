@@ -75,6 +75,8 @@ namespace RetailClientWinForm
         }
         private async void start_Click(object sender, EventArgs e)
         {
+            //speech.StartOutput(new OutputData(Encoding.Default.GetBytes("test")));
+            //return;
             //TalkToBot("牙膏多少錢").Wait();
             //return;
             EnableButton(false);
@@ -168,9 +170,10 @@ namespace RetailClientWinForm
                 null,
                 (arg) => {
                             UserName = arg.GetEventData<string>();
+                            bot.From = UserName;
                             vision.StopInput();
 
-                            
+                            speech.StartOutput(new OutputData(Encoding.Default.GetBytes($"你好，{UserName} 有甚麼我可以幫你的嗎？")));
                         },
                 null,
                 null);

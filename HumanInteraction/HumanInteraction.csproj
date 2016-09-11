@@ -124,7 +124,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RobotBehaviors\EventArgs.cs" />
     <Compile Include="RobotBehaviors\IRobotInteraction.cs" />
+    <Compile Include="RobotBehaviors\Speech\SpeechInteraction_Output.cs" />
     <Compile Include="RobotBehaviors\Speech\SpeechInteration.cs" />
+    <Compile Include="RobotBehaviors\Speech\TextToSpeechHelper.cs" />
+    <Compile Include="RobotBehaviors\Speech\TextToSpeechHelper_Names.cs" />
     <Compile Include="RobotBehaviors\Vision\VisionInteraction.cs" />
     <Compile Include="RobotBehaviors\Vision\VisionInteraction_FaceIdentify.cs" />
     <Compile Include="Utility\GenericTypeHelper.cs" />

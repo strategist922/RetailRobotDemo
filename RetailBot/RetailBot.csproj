@@ -128,6 +128,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\GoodsHelper.cs" />
+    <Compile Include="Utility\Helpers.cs" />
+    <Compile Include="Utility\RecommendationWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

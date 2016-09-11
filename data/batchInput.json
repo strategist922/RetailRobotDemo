@@ -1,0 +1,6 @@
+  {
+    "requests": [
+      { "SeedItems": [ "A0002" ] },
+      { "SeedItems": [ "A0007" ] }
+    ]
+  }

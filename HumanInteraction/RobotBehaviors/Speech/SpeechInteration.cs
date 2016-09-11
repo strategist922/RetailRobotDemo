@@ -7,13 +7,16 @@ using System.Threading.Tasks;
 using MSTC.Robot.Interactions.RobotBehaviors;
 namespace MSTC.Robot.Interactions.RobotBehaviors.Speech
 {
-    public class SpeechInteration : IRobotInteraction
+    public partial class SpeechInteration : IRobotInteraction
     {
         MicrophoneRecognitionClient _speechClient = null;
         OnPartialOutputReceived _partialOutputReceived = null;
         OnIntentReceived _intentReceived = null;
         OnOutputReceived _outputReveived = null;
         OnError _onError = null;
+        private string SPEECHAPI_KEY1 = null;
+        private string SPEECHAPI_KEY2 = null;
+        private string Language = null;
         public SpeechInteration(string language, string speechApiPrimaryKey, string speechApiSecondaryKey,
                                 string luisApiId, string luisSubscriptionId)
         {
@@ -23,8 +26,11 @@ namespace MSTC.Robot.Interactions.RobotBehaviors.Speech
                                                                     speechApiSecondaryKey,
                                                                     luisApiId,
                                                                     luisSubscriptionId);
+            SPEECHAPI_KEY1 = speechApiPrimaryKey;
+            SPEECHAPI_KEY2 = speechApiSecondaryKey;
+            Language = language;
             this._speechClient.OnIntent += this.OnIntentHandler;
-
+            
             // Event handlers for speech recognition results
             this._speechClient.OnMicrophoneStatus += this.OnMicrophoneStatus;
             this._speechClient.OnPartialResponseReceived += this.OnPartialResponseReceivedHandler;
@@ -37,6 +43,9 @@ namespace MSTC.Robot.Interactions.RobotBehaviors.Speech
                                                                     language,
                                                                     speechApiPrimaryKey,
                                                                     speechApiSecondaryKey);
+            SPEECHAPI_KEY1 = speechApiPrimaryKey;
+            SPEECHAPI_KEY2 = speechApiSecondaryKey;
+            Language = language;
             // Event handlers for speech recognition results
             this._speechClient.OnMicrophoneStatus += this.OnMicrophoneStatus;
             this._speechClient.OnPartialResponseReceived += this.OnPartialResponseReceivedHandler;
@@ -123,10 +132,6 @@ namespace MSTC.Robot.Interactions.RobotBehaviors.Speech
             _speechClient.Dispose();
         }
 
-        public void StartOutput(OutputData data)
-        {
-            //No vision output interaction is required
-            
-        }
+
     }
 }

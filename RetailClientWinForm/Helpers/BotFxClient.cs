@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Connector.DirectLine;
 using Microsoft.Bot.Connector;
 using Microsoft.Bot.Connector.DirectLine.Models;
+using System.Configuration;
 
 namespace RetailClientWinForm.Helpers
 {
@@ -38,6 +39,7 @@ namespace RetailClientWinForm.Helpers
                 var o = conversations.PostMessage(token.ConversationId, new Message
                 {
                     FromProperty = From,
+                    ChannelData = ConfigurationManager.AppSettings["RetailLocation"],
                     ConversationId = token.ConversationId,
                     Text = msg
                 });

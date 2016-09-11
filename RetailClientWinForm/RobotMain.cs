@@ -1,6 +1,5 @@
 ﻿//#define LUIS_INTEGRATION 
 using RetailClientWinForm.Helpers;
-using MSTC.Robot.Interactions.RobotBehaviors;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,6 +17,7 @@ using Microsoft.WindowsAzure.Storage.Auth;
 using System.IO;
 using MSTC.Robot.Interactions.RobotBehaviors.Speech;
 using MSTC.Robot.Interactions.RobotBehaviors.Vision;
+using MSTC.Robot.Interactions.RobotBehaviors;
 
 namespace RetailClientWinForm
 {
@@ -27,6 +27,7 @@ namespace RetailClientWinForm
         private delegate void SetButtonStatusHandler(bool enabled);
         private BotFxClient bot = null;
         private string UserName = null;
+        
 #if LUIS_INTEGRATION
         SpeechInteration speech = new SpeechInteration(
                                             language: ConfigurationManager.AppSettings["SpeechLanguage"],

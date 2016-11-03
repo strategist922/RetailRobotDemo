@@ -1,1 +1,4 @@
 ﻿https://azure.microsoft.com/en-us/documentation/articles/cognitive-services-recommendations-quick-start/
+
+Pepper language support:
+http://doc.aldebaran.com/2-1/family/robots/languages.html?highlight=support%20language

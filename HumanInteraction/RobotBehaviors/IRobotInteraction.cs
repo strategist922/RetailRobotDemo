@@ -10,28 +10,31 @@ namespace MSTC.Robot.Interactions.RobotBehaviors
 {
     public delegate void OnPartialOutputReceived(PartialOutputEvent e);
     public delegate void OnIntentReceived(IntentEvent e);
-    public delegate void OnOutputReceived(FinalOutputEvemt e);
+    public delegate void OnOutputReceived(FinalOutputEvent e);
     public delegate void OnError(ErrorEvent e);
 
-    
+
+
     /// <summary>
     /// Define the interation between robot and user
     /// </summary>
     interface IRobotInteraction:IDisposable
     {
+        OnPartialOutputReceived OnPartialOutputReceivedHandler { get; set; }
+        OnOutputReceived OnFinalOutputReceivedHandler { get; set; }
+        OnIntentReceived OnIntentReceivedHandler { get; set; }
+        OnError OnErrorHandler { get; set; }
         /// <summary>
         /// Starts an input from user
         /// </summary>
         /// <param name="OnPartialOutputReceivedHandler">Triggered when partial interaction results were received, can be null if the interaction is not a continous interaction</param>
         /// <param name="OnFinalOutputReceivedHandler">Triggered when full action is returned</param>
         /// <param name="OnIntentReceivedHandler">If the backend is able to identify the intent of this input, this event will be triggered.</param>
-        void StartInput(
-            OnPartialOutputReceived OnPartialOutputReceivedHandler, 
-            OnOutputReceived OnFinalOutputReceivedHandler,
-            OnIntentReceived OnIntentReceivedHandler,
-            OnError OnErrorHandler);
+        Task StartInputAsync();
+
+        Task StartInputAsync(Stream stream);
         void StopInput();
 
-        void StartOutput(OutputData data);
+        Task StopInputAsync(OutputData data);
     }
 }

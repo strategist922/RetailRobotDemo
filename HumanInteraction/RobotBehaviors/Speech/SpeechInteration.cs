@@ -5,27 +5,50 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MSTC.Robot.Interactions.RobotBehaviors;
+using System.IO;
+
 namespace MSTC.Robot.Interactions.RobotBehaviors.Speech
 {
     public partial class SpeechInteration : IRobotInteraction
     {
         MicrophoneRecognitionClient _speechClient = null;
-        OnPartialOutputReceived _partialOutputReceived = null;
-        OnIntentReceived _intentReceived = null;
-        OnOutputReceived _outputReveived = null;
-        OnError _onError = null;
         private string SPEECHAPI_KEY1 = null;
         private string SPEECHAPI_KEY2 = null;
         private string Language = null;
+
+        public OnPartialOutputReceived OnPartialOutputReceivedHandler
+        {
+            get;set;
+        }
+
+        public OnOutputReceived OnFinalOutputReceivedHandler
+        {
+            get; set;
+        }
+
+        public OnIntentReceived OnIntentReceivedHandler
+        {
+            get; set;
+        }
+
+        public OnError OnErrorHandler
+        {
+            get; set;
+        }
+
         public SpeechInteration(string language, string speechApiPrimaryKey, string speechApiSecondaryKey,
                                 string luisApiId, string luisSubscriptionId)
         {
-            _speechClient = SpeechRecognitionServiceFactory.CreateMicrophoneClientWithIntent(
-                                                                    language,
-                                                                    speechApiPrimaryKey,
-                                                                    speechApiSecondaryKey,
-                                                                    luisApiId,
-                                                                    luisSubscriptionId);
+            _speechClient = SpeechRecognitionServiceFactory.CreateMicrophoneClient(SpeechRecognitionMode.LongDictation,
+                                                                                    language,
+                                                                                    speechApiPrimaryKey,
+                                                                                    speechApiSecondaryKey);
+                //.CreateMicrophoneClientWithIntent(
+                //                                                    language,
+                //                                                    speechApiPrimaryKey,
+                //                                                    speechApiSecondaryKey,
+                //                                                    luisApiId,
+                //                                                    luisSubscriptionId);
             SPEECHAPI_KEY1 = speechApiPrimaryKey;
             SPEECHAPI_KEY2 = speechApiSecondaryKey;
             Language = language;
@@ -54,14 +77,14 @@ namespace MSTC.Robot.Interactions.RobotBehaviors.Speech
         }
         private void OnMicDictationResponseReceivedHandler(object sender, SpeechResponseEventArgs e)
         {
-            if (_outputReveived != null)
+            if (OnFinalOutputReceivedHandler != null)
             {
                 if (e.PhraseResponse != null && e.PhraseResponse.Results.Length > 0)
                 {
-                    FinalOutputEvemt evt = new FinalOutputEvemt();
+                    FinalOutputEvent evt = new FinalOutputEvent();
                     evt.SetEventData(e.PhraseResponse.Results[0].DisplayText);
                     evt.IsCompleted = true;
-                    _outputReveived(evt);
+                    OnFinalOutputReceivedHandler(evt);
                 }
             }
             _speechClient.EndMicAndRecognition();
@@ -69,9 +92,9 @@ namespace MSTC.Robot.Interactions.RobotBehaviors.Speech
 
         private void OnConversationErrorHandler(object sender, SpeechErrorEventArgs e)
         {
-            if(_onError != null)
+            if(OnErrorHandler != null)
             {
-                _onError(new ErrorEvent()
+                OnErrorHandler(new ErrorEvent()
                 {
                     ErrorMessage = $"{e.SpeechErrorCode} : {e.SpeechErrorText}",
                     InnerException = null
@@ -81,12 +104,12 @@ namespace MSTC.Robot.Interactions.RobotBehaviors.Speech
 
         private void OnPartialResponseReceivedHandler(object sender, PartialSpeechResponseEventArgs e)
         {
-            if(_partialOutputReceived != null)
+            if(OnPartialOutputReceivedHandler != null)
             {
                 PartialOutputEvent evt = new PartialOutputEvent();
                 evt.SetEventData(e.PartialResult);
-                evt.IsCompleted = false;    
-                _partialOutputReceived(evt);
+                evt.IsCompleted = false;
+                OnPartialOutputReceivedHandler(evt);
             }
         }
 
@@ -96,32 +119,18 @@ namespace MSTC.Robot.Interactions.RobotBehaviors.Speech
 
         private void OnIntentHandler(object sender, SpeechIntentEventArgs e)
         {
-            if(_intentReceived != null)
+            if(OnIntentReceivedHandler != null)
             {
                 IntentEvent evt = new IntentEvent()
                 {
                     Result = e.Payload
                 };
 
-                _intentReceived(evt);
+                OnIntentReceivedHandler(evt);
             }
             _speechClient.EndMicAndRecognition();
         }
-
-
-
-        public void StartInput(OnPartialOutputReceived OnPartialOutputReceivedHandler,
-            OnOutputReceived OnFinalOutputReceivedHandler,
-            OnIntentReceived OnIntentReceivedHandler,
-            OnError OnErrorHandler)
-        {
-            _partialOutputReceived = OnPartialOutputReceivedHandler;
-            _intentReceived = OnIntentReceivedHandler;
-            _outputReveived = OnFinalOutputReceivedHandler;
-            _onError = OnErrorHandler;
-
-            _speechClient.StartMicAndRecognition();
-        }
+        
         public void StopInput()
         {
             _speechClient.EndMicAndRecognition();
@@ -132,6 +141,14 @@ namespace MSTC.Robot.Interactions.RobotBehaviors.Speech
             _speechClient.Dispose();
         }
 
+        public async Task StartInputAsync()
+        {
+            _speechClient.StartMicAndRecognition();
+        }
 
+        public Task StartInputAsync(Stream stream)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

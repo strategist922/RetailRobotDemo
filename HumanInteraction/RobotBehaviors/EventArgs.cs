@@ -32,7 +32,7 @@ namespace MSTC.Robot.Interactions.RobotBehaviors
             return GenericTypeHelper.GetData<T>(EventData);
         }
     }
-    public class FinalOutputEvemt : PartialOutputEvent { }
+    public class FinalOutputEvent : PartialOutputEvent { }
 
     public class OutputData
     {

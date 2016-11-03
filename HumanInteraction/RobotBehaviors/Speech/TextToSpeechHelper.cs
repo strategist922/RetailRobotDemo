@@ -36,7 +36,7 @@ namespace MSTC.Robot.Interactions.RobotBehaviors.Speech
                 TOKEN = await AcquireTokenAsync();
             }
             var client = new HttpClient();
-            client.DefaultRequestHeaders.TryAddWithoutValidation("X-Microsoft-OutputFormat", "riff-8khz-8bit-mono-mulaw");
+            client.DefaultRequestHeaders.TryAddWithoutValidation("X-Microsoft-OutputFormat", "riff-16khz-16bit-mono-pcm");
             client.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/ssml+xml");
             client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", $"Bearer {TOKEN}");
             client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "RetailDemo");
@@ -50,15 +50,10 @@ namespace MSTC.Robot.Interactions.RobotBehaviors.Speech
                 {
                     if (respMessage.IsCompleted && respMessage.Result != null && respMessage.Result.IsSuccessStatusCode)
                     {
-                        var httpStream = await respMessage.Result.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                        using (var sr = new BinaryReader(httpStream))
+                        using (var httpStream = await respMessage.Result.Content.ReadAsStreamAsync().ConfigureAwait(false))
                         {
-                            //TODO: control hardware to "speak out"
-                            using (var fs = File.OpenWrite(@"C:\temp\test.wav"))
-                            {
-                                httpStream.CopyTo(fs);
-                                fs.Close();
-                            }
+                            var player = new SoundPlayer(httpStream);
+                            player.PlaySync();//.Play();
                         }
                     }
                 },

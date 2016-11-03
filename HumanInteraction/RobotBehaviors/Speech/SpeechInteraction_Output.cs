@@ -9,7 +9,7 @@ namespace MSTC.Robot.Interactions.RobotBehaviors.Speech
 {
     public partial class SpeechInteration : IRobotInteraction
     {
-        public async void StartOutput(OutputData data)
+        public async Task StopInputAsync(OutputData data)
         {
             TextToSpeechHelper helper = new TextToSpeechHelper(
                                                 SPEECHAPI_KEY1,

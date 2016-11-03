@@ -31,7 +31,7 @@ namespace MSTC.Robot.Interactions.RobotBehaviors.Vision
 
         }
         OnOutputReceived _onOutputReceived = null;
-        public async void StartInput(OnPartialOutputReceived OnPartialOutputReceivedHandler, 
+        public async Task StartInput(OnPartialOutputReceived OnPartialOutputReceivedHandler, 
                                 OnOutputReceived OnFinalOutputReceivedHandler, 
                                 OnIntentReceived OnIntentReceivedHandler, 
                                 OnError OnErrorHandler)
@@ -41,7 +41,7 @@ namespace MSTC.Robot.Interactions.RobotBehaviors.Vision
             await CapturePhoto();
         }
 
-        public void StartOutput(OutputData data)
+        public async Task StopInputAsync(OutputData data)
         {
             //No vision output interaction is required
         }

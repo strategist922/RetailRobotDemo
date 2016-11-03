@@ -8,6 +8,7 @@ using Microsoft.Bot.Connector.DirectLine;
 using Microsoft.Bot.Connector;
 using Microsoft.Bot.Connector.DirectLine.Models;
 using System.Configuration;
+using System.Net.Http;
 
 namespace RetailClientWinForm.Helpers
 {
@@ -32,21 +33,37 @@ namespace RetailClientWinForm.Helpers
             conversations = new Conversations(client);
             token = conversations.NewConversation();
         }
+
+
+        
         public async Task<string> TalkAsync(string msg)
         {
             try
             {
                 var o = conversations.PostMessage(token.ConversationId, new Message
                 {
-                    FromProperty = From,
-                    ChannelData = ConfigurationManager.AppSettings["RetailLocation"],
+                    FromProperty = From == null ? "Michael SH Chi" : From,
+                    //ChannelData = ConfigurationManager.AppSettings["RetailLocation"],
                     ConversationId = token.ConversationId,
                     Text = msg
                 });
-                var messages = conversations.GetMessages(token.ConversationId);
-                var reply = messages.Messages.OrderByDescending(m => m.Created).First();
+                try
+                {
+                    //var messages = await conversations.GetMessagesAsync(token.ConversationId);
+                    var messages = conversations.GetMessages(token.ConversationId);
+                    var reply = messages.Messages.OrderByDescending(m => m.Created).First();
 
-                return reply.Text;
+                    //var messages = await conversations.GetMessagesWithHttpMessagesAsync(token.ConversationId);
+                    //var reply = messages.Body.Messages.OrderByDescending(m => m.Created).FirstOrDefault();
+                    return reply.Text;
+                }
+                catch(Exception exp)
+                {
+                    var a = exp;
+
+                    return $"[Error]{exp.Message}";
+                }
+
             }
             catch (Exception exp)
             {

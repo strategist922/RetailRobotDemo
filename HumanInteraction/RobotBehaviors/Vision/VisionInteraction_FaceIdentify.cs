@@ -21,6 +21,26 @@ namespace MSTC.Robot.Interactions.RobotBehaviors.Vision
 {
     partial class VisionInteraction : IRobotInteraction
     {
+        public OnPartialOutputReceived OnPartialOutputReceivedHandler
+        {
+            get;set;
+        }
+
+        public OnOutputReceived OnFinalOutputReceivedHandler
+        {
+            get; set;
+        }
+
+        public OnIntentReceived OnIntentReceivedHandler
+        {
+            get; set;
+        }
+
+        public OnError OnErrorHandler
+        {
+            get; set;
+        }
+
         private string UploadToCloud(Bitmap bitmap)
         {
             CloudStorageAccount csa = new CloudStorageAccount(new StorageCredentials(
@@ -71,11 +91,13 @@ namespace MSTC.Robot.Interactions.RobotBehaviors.Vision
         internal async Task IdentifyUsersAsync(string url)
         {
             VisionServiceClient VisionServiceClient = new VisionServiceClient(VISIONAPI_KEY);
+            //VisualFeature[] visualFeatures = new VisualFeature[] {
+            //                                            VisualFeature.Adult, VisualFeature .Categories,
+            //                                                VisualFeature.Color,VisualFeature.Description,
+            //                                                    VisualFeature.Faces,VisualFeature.ImageType,
+            //                                                        VisualFeature.Tags};
             VisualFeature[] visualFeatures = new VisualFeature[] {
-                                                        VisualFeature.Adult, VisualFeature .Categories,
-                                                            VisualFeature.Color,VisualFeature.Description,
-                                                                VisualFeature.Faces,VisualFeature.ImageType,
-                                                                    VisualFeature.Tags};
+                                                                VisualFeature.Faces};
 
             //url = "https://michistorageea.blob.core.windows.net/data/DSC01498.JPG";
 
@@ -98,13 +120,23 @@ namespace MSTC.Robot.Interactions.RobotBehaviors.Vision
 
                 if(_onOutputReceived != null)
                 {
-                    _onOutputReceived(new FinalOutputEvemt()
+                    _onOutputReceived(new FinalOutputEvent()
                     {
                         IsCompleted = true,
                         EventData = Encoding.UTF8.GetBytes(string.Join(",", users))
                     });
                 }
             }
+        }
+
+        public async Task StartInputAsync()
+        {
+            await CapturePhoto();
+        }
+
+        public async Task StartInputAsync(Stream stream)
+        {
+            throw new NotImplementedException();
         }
     }
 }

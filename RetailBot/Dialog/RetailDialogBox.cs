@@ -50,7 +50,7 @@ namespace RetailBot.Dialog
             }
             
             await context.PostAsync($"you ({From.Name}) are asking location of {good.Entity}");
-            await context.PostAsync($"you ({From.Name}) have asked location of {string.Join(",",goods.ToArray())}");
+            //await context.PostAsync($"you ({From.Name}) have asked location of {string.Join(",",goods.ToArray())}");
             context.Wait(MessageReceived);
         }
         [LuisIntent("AskPrice")]
@@ -67,7 +67,7 @@ namespace RetailBot.Dialog
             result.TryFindEntity("number", out quantity);
             
             await context.PostAsync($"you ({From.Name}) are asking {good.Entity}");
-            await context.PostAsync($"you ({From.Name}) have asked {string.Join(",", goods.ToArray())}");
+            //await context.PostAsync($"you ({From.Name}) have asked {string.Join(",", goods.ToArray())}");
             context.Wait(MessageReceived);
         }
     }
